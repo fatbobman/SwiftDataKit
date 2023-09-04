@@ -31,11 +31,17 @@ extension NSManagedObjectID {
     }
 
     var storeIdentifier: String {
-        uriRepresentation().host()!
+        guard let identifier = uriRepresentation().host() else {
+            fatalError("\(#file) \(#line) Can't get storeIdentifier from ManagedObjectID:\(self)")
+        }
+        return identifier
     }
 
     var entityName: String {
-        entity.name!
+        guard let entityName = entity.name else {
+            fatalError("\(#file) \(#line) Can't get entity name from ManagedObjectID:\(self)")
+        }
+        return entityName
     }
 }
 
