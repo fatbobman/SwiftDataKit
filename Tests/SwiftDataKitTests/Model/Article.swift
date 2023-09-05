@@ -24,18 +24,18 @@ class ArticleCollection {
 class Article {
     var name: String
     @Relationship(deleteRule: .nullify)
-    var tags: [Tag]
+    var category: Category?
     @Relationship(deleteRule: .nullify)
     var collection: ArticleCollection?
-    init(name: String, tags: [Tag] = [], collection: ArticleCollection? = nil) {
+    init(name: String, category: Category? = nil, collection: ArticleCollection? = nil) {
         self.name = name
-        self.tags = tags
+        self.category = category
         self.collection = collection
     }
 }
 
 @Model
-class Tag {
+class Category {
     var name: String
     @Relationship(deleteRule: .nullify)
     var articles: [Article]
@@ -43,17 +43,21 @@ class Tag {
         self.name = name
         self.articles = articles
     }
+
+    enum Name: String, CaseIterable {
+        case tech, health, travel
+    }
 }
 
 @ModelActor
 actor ArticleHandler {
-    func dataGenerator(collectionCount: Int = 20, articleCount: Int = 100, tagNames: [String] = ["tech", "health", "travel"]) throws {
-        // create tags
-        var tags = [Tag]()
-        for tagName in tagNames {
-            let tag = Tag(name: tagName)
-            modelContext.insert(tag)
-            tags.append(tag)
+    func dataGenerator(collectionCount: Int = 20, articleCount: Int = 100, categoryNames: [String] = Category.Name.allCases.map(\.rawValue)) throws {
+        // create category
+        var categorys = [Category]()
+        for categoryName in categoryNames {
+            let category = Category(name: categoryName)
+            modelContext.insert(category)
+            categorys.append(category)
         }
 
         // create collections
@@ -68,49 +72,75 @@ actor ArticleHandler {
         for i in 0 ..< articleCount {
             let article = Article(name: "a\(i)")
             article.collection = collections.randomElement()!
-            let tags = tags.shuffled()
-            for n in 0 ..< Int.random(in: 0 ..< tags.count) {
-                article.tags.append(tags[n])
-            }
+            article.category = categorys.randomElement()!
             modelContext.insert(article)
         }
 
         try modelContext.save()
     }
 
-    func getCollectCountByTagByKit(tagName: String) -> Int {
-        guard let tag = getTag(by: tagName) else {
-            fatalError("Can't get tag by name:\(tagName)")
+    func getCollectCountByTagByKit(categoryName: String) -> Int {
+        guard let category = getCategory(by: categoryName) else {
+            fatalError("Can't get tag by name:\(categoryName)")
         }
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "ArticleCollection")
-        let predicate = NSPredicate(format: "SUBQUERY(articles,$article, %@ IN $article.tags).@count > 0", tag.managedObject)
+        let predicate = NSPredicate(format: "SUBQUERY(articles,$article,$article.category == %@).@count > 0", category.managedObject)
         fetchRequest.predicate = predicate
         return (try? modelContext.managedObjectContext.count(for: fetchRequest)) ?? 0
     }
 
-    func getCollectCountByTagByQuery(tagName: String) -> Int {
-        guard let tag = getTag(by: tagName) else {
-            fatalError("Can't get tag by name:\(tagName)")
+    func getCollectPersistentIdentifiersByTagByKit(categoryName: String) -> [PersistentIdentifier] {
+        guard let category = getCategory(by: categoryName) else {
+            fatalError("Can't get tag by name:\(categoryName)")
+        }
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "ArticleCollection")
+        let predicate = NSPredicate(format: "SUBQUERY(articles,$article,$article.category == %@).@count > 0", category.managedObject)
+        fetchRequest.predicate = predicate
+        fetchRequest.sortDescriptors = [.init(key: "name", ascending: true)]
+        let collections = (try? modelContext.managedObjectContext.fetch(fetchRequest)) ?? []
+        return collections.map(\.objectID.persistentIdentifier)
+    }
+
+    func getCollectNamesByTagByKit(categoryName: String) -> [String] {
+        guard let category = getCategory(by: categoryName) else {
+            fatalError("Can't get tag by name:\(categoryName)")
+        }
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "ArticleCollection")
+        let predicate = NSPredicate(format: "SUBQUERY(articles,$article,$article.category == %@).@count > 0", category.managedObject)
+
+        fetchRequest.predicate = predicate
+        fetchRequest.sortDescriptors = [.init(key: "name", ascending: true)]
+        let collections = (try? modelContext.managedObjectContext.fetch(fetchRequest)) ?? []
+        return collections.map { $0.value(forKey: "name") as! String }
+    }
+
+    func getCollectCountByTagByQuery(categoryName: String) -> Int {
+        guard let category = getCategory(by: categoryName) else {
+            fatalError("Can't get tag by name:\(categoryName)")
         }
         let description = FetchDescriptor<ArticleCollection>()
         let collections = (try? modelContext.fetch(description)) ?? []
         let count = collections.filter { collection in
             !(collection.articles).filter { article in
-                article.tags.contains(tag)
+                article.category == category
             }.isEmpty
         }.count
         return count
     }
 
-    func getTag(by name: String) -> Tag? {
-        let predicate = #Predicate<Tag> {
+    func getCategory(by name: String) -> Category? {
+        let predicate = #Predicate<Category> {
             $0.name == name
         }
-        let tagDescription = FetchDescriptor<Tag>(predicate: predicate)
-        return try? modelContext.fetch(tagDescription).first
+        let categoryDescription = FetchDescriptor<Category>(predicate: predicate)
+        return try? modelContext.fetch(categoryDescription).first
     }
 
     func reset() {
         modelContext.managedObjectContext.reset()
+    }
+
+    func convertIdentifierToModel<T: PersistentModel>(ids: [PersistentIdentifier], type: T.Type) -> [T] {
+        ids.compactMap { self[$0, as: type] }
     }
 }
