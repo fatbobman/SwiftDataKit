@@ -53,11 +53,11 @@ class Category {
 actor ArticleHandler {
     func dataGenerator(collectionCount: Int = 20, articleCount: Int = 100, categoryNames: [String] = Category.Name.allCases.map(\.rawValue)) throws {
         // create category
-        var categorys = [Category]()
+        var categories = [Category]()
         for categoryName in categoryNames {
             let category = Category(name: categoryName)
             modelContext.insert(category)
-            categorys.append(category)
+            categories.append(category)
         }
 
         // create collections
@@ -72,7 +72,7 @@ actor ArticleHandler {
         for i in 0 ..< articleCount {
             let article = Article(name: "a\(i)")
             article.collection = collections.randomElement()!
-            article.category = categorys.randomElement()!
+            article.category = categories.randomElement()!
             modelContext.insert(article)
         }
 
