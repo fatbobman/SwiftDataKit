@@ -12,31 +12,33 @@ import XCTest
 
 class SUBQUERYTests: XCTestCase {
     func testSubQueryByKit() async throws {
-        let container = try ModelContainer(for: ArticleCollection.self, Article.self, Tag.self, configurations: .init(isStoredInMemoryOnly: true))
+        let container = try ModelContainer(for: ArticleCollection.self, Article.self, Category.self, configurations: .init(isStoredInMemoryOnly: true))
         let handler = ArticleHandler(modelContainer: container)
         try await handler.dataGenerator()
-        let countByKit = await handler.getCollectCountByTagByKit(tagName: "tech")
-        let countByQuery = await handler.getCollectCountByTagByQuery(tagName: "tech")
+        let countByKit = await handler.getCollectCountByTagByKit(categoryName: Category.Name.tech.rawValue)
+        let countByQuery = await handler.getCollectCountByTagByQuery(categoryName: Category.Name.tech.rawValue)
         XCTAssertEqual(countByKit, countByQuery)
     }
 
+    // 0.21s for 10000 articles
     func testSubQueryByKitPerformance() async throws {
-        let container = try ModelContainer(for: ArticleCollection.self, Article.self, Tag.self, configurations: .init(isStoredInMemoryOnly: true))
+        let container = try ModelContainer(for: ArticleCollection.self, Article.self, Category.self, configurations: .init(isStoredInMemoryOnly: true))
         let handler = ArticleHandler(modelContainer: container)
-        try await handler.dataGenerator(collectionCount: 300, articleCount: 10000)
+        try await handler.dataGenerator(collectionCount: 300, articleCount: 1000)
         await handler.reset()
         measureAsync(timeout: 10) {
-            let _ = await handler.getCollectCountByTagByKit(tagName: "tech")
+            let _ = await handler.getCollectCountByTagByKit(categoryName: Category.Name.tech.rawValue)
         }
     }
 
+    // 0.83s for 10000 articles
     func testSubQueryBySwiftDataPerformance() async throws {
-        let container = try ModelContainer(for: ArticleCollection.self, Article.self, Tag.self, configurations: .init(isStoredInMemoryOnly: true))
+        let container = try ModelContainer(for: ArticleCollection.self, Article.self, Category.self, configurations: .init(isStoredInMemoryOnly: true))
         let handler = ArticleHandler(modelContainer: container)
-        try await handler.dataGenerator(collectionCount: 300, articleCount: 10000)
+        try await handler.dataGenerator(collectionCount: 300, articleCount: 1000)
         await handler.reset()
         measureAsync(timeout: 10) {
-            let _ = await handler.getCollectCountByTagByQuery(tagName: "tech")
+            let _ = await handler.getCollectCountByTagByQuery(categoryName: Category.Name.tech.rawValue)
         }
     }
 }
