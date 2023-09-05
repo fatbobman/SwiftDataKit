@@ -47,7 +47,7 @@ class Tag {
 
 @ModelActor
 actor ArticleHandler {
-    func dataGenerator(collectionCount: Int = 20, articleCount: Int = 100, tagNames: [String] = ["tech", "health", "travel"]) {
+    func dataGenerator(collectionCount: Int = 20, articleCount: Int = 100, tagNames: [String] = ["tech", "health", "travel"]) throws {
         // create tags
         var tags = [Tag]()
         for tagName in tagNames {
@@ -74,6 +74,8 @@ actor ArticleHandler {
             }
             modelContext.insert(article)
         }
+
+        try modelContext.save()
     }
 
     func getCollectCountByTagByKit(tagName: String) -> Int {
@@ -107,5 +109,8 @@ actor ArticleHandler {
         let tagDescription = FetchDescriptor<Tag>(predicate: predicate)
         return try? modelContext.fetch(tagDescription).first
     }
-}
 
+    func reset() {
+        modelContext.managedObjectContext.reset()
+    }
+}
