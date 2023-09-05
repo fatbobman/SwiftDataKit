@@ -86,7 +86,7 @@ actor ArticleHandler {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "ArticleCollection")
         let predicate = NSPredicate(format: "SUBQUERY(articles,$article,$article.category == %@).@count > 0", category.managedObject)
         fetchRequest.predicate = predicate
-        return (try? modelContext.managedObjectContext.count(for: fetchRequest)) ?? 0
+        return (try? modelContext.managedObjectContext?.count(for: fetchRequest)) ?? 0
     }
 
     func getCollectPersistentIdentifiersByTagByKit(categoryName: String) -> [PersistentIdentifier] {
@@ -97,8 +97,8 @@ actor ArticleHandler {
         let predicate = NSPredicate(format: "SUBQUERY(articles,$article,$article.category == %@).@count > 0", category.managedObject)
         fetchRequest.predicate = predicate
         fetchRequest.sortDescriptors = [.init(key: "name", ascending: true)]
-        let collections = (try? modelContext.managedObjectContext.fetch(fetchRequest)) ?? []
-        return collections.map(\.objectID.persistentIdentifier)
+        let collections = (try? modelContext.managedObjectContext?.fetch(fetchRequest)) ?? []
+        return collections.compactMap(\.objectID.persistentIdentifier)
     }
 
     func getCollectNamesByTagByKit(categoryName: String) -> [String] {
@@ -110,7 +110,7 @@ actor ArticleHandler {
 
         fetchRequest.predicate = predicate
         fetchRequest.sortDescriptors = [.init(key: "name", ascending: true)]
-        let collections = (try? modelContext.managedObjectContext.fetch(fetchRequest)) ?? []
+        let collections = (try? modelContext.managedObjectContext?.fetch(fetchRequest)) ?? []
         return collections.map { $0.value(forKey: "name") as! String }
     }
 
@@ -137,7 +137,7 @@ actor ArticleHandler {
     }
 
     func reset() {
-        modelContext.managedObjectContext.reset()
+        modelContext.managedObjectContext?.reset()
     }
 
     func convertIdentifierToModel<T: PersistentModel>(ids: [PersistentIdentifier], type: T.Type) -> [T] {

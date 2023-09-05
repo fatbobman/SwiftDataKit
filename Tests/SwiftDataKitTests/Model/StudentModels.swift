@@ -42,7 +42,7 @@ actor StudentHandler {
         let express = NSExpression(forFunction: "count:", arguments: [year])
         expressDescription.expression = express
         fetchRequest.propertiesToFetch = ["birthOfYear", expressDescription]
-        let fetchResult = (try? modelContext.managedObjectContext.fetch(fetchRequest) as? [[String: Any]]) ?? []
+        let fetchResult = (try? modelContext.managedObjectContext?.fetch(fetchRequest) as? [[String: Any]]) ?? []
         let result: [Int: Int] = fetchResult.reduce(into: [:]) { result, element in
             result[element["birthOfYear"] as! Int] = (element["count"] as! Int?) ?? 0
         }
@@ -60,7 +60,7 @@ actor StudentHandler {
     }
     
     func reset() {
-        modelContext.managedObjectContext.reset()
+        modelContext.managedObjectContext?.reset()
     }
 }
 

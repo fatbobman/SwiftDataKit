@@ -16,7 +16,7 @@ class URLtoPersistentIdentifierTests: XCTestCase {
         let container = try ModelContainer(for: Student.self, configurations: .init(isStoredInMemoryOnly: true))
         let hander = StudentHandler(modelContainer: container)
         let student = try await hander.createNewStudent()
-        guard let identifier = student.persistentModelID.uriRepresentation.persistentIdentifier else {
+        guard let identifier = student.persistentModelID.uriRepresentation?.persistentIdentifier else {
             XCTFail("Failed to get persistent identifier")
             return
         }

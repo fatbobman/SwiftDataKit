@@ -11,7 +11,8 @@ import SwiftData
 
 public extension NSManagedObjectID {
     // Compute PersistentIdentifier from NSManagedObjectID
-    var persistentIdentifier: PersistentIdentifier {
+    var persistentIdentifier: PersistentIdentifier? {
+        guard let storeIdentifier, let entityName else { return nil }
         let json = PersistentIdentifierJSON(
             implementation: .init(primaryKey: primaryKey,
                                   uriRepresentation: uriRepresentation(),
@@ -20,9 +21,9 @@ public extension NSManagedObjectID {
                                   entityName: entityName)
         )
         let encoder = JSONEncoder()
-        let data = try! encoder.encode(json)
+        guard let data = try? encoder.encode(json) else { return nil }
         let decoder = JSONDecoder()
-        return try! decoder.decode(PersistentIdentifier.self, from: data)
+        return try? decoder.decode(PersistentIdentifier.self, from: data)
     }
 }
 
@@ -34,18 +35,14 @@ extension NSManagedObjectID {
     }
 
     // Store identifier is host of URI
-    var storeIdentifier: String {
-        guard let identifier = uriRepresentation().host() else {
-            fatalError("\(#file) \(#line) Can't get storeIdentifier from ManagedObjectID:\(self)")
-        }
+    var storeIdentifier: String? {
+        guard let identifier = uriRepresentation().host() else { return nil }
         return identifier
     }
 
     // Entity name from entity name
-    var entityName: String {
-        guard let entityName = entity.name else {
-            fatalError("\(#file) \(#line) Can't get entity name from ManagedObjectID:\(self)")
-        }
+    var entityName: String? {
+        guard let entityName = entity.name else { return nil }
         return entityName
     }
 }

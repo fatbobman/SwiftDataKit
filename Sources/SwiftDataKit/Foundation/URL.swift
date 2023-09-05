@@ -21,9 +21,9 @@ public extension URL {
             return nil
         }
         let entityName = pathComponents[1]
-        let pk = pathComponents[2]
+        let primaryKey = pathComponents[2]
         let json = PersistentIdentifierJSON(
-            implementation: .init(primaryKey: pk,
+            implementation: .init(primaryKey: primaryKey,
                                   uriRepresentation: self,
                                   isTemporary: false,
                                   storeIdentifier: host,
