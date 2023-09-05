@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 public extension URL {
-    // call it in ModelActor
+    // Computed property to create a PersistentIdentifier from a URL
     var persistentIdentifier: PersistentIdentifier? {
         guard scheme == "x-coredata",
               let host = host()

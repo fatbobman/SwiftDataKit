@@ -10,6 +10,7 @@ import Foundation
 import SwiftData
 
 public extension NSManagedObjectID {
+    // Compute PersistentIdentifier from NSManagedObjectID
     var persistentIdentifier: PersistentIdentifier {
         let json = PersistentIdentifierJSON(
             implementation: .init(primaryKey: primaryKey,
@@ -25,11 +26,14 @@ public extension NSManagedObjectID {
     }
 }
 
+// Extensions to expose needed implementation details
 extension NSManagedObjectID {
+    // Primary key is last path component of URI
     var primaryKey: String {
         uriRepresentation().lastPathComponent
     }
 
+    // Store identifier is host of URI
     var storeIdentifier: String {
         guard let identifier = uriRepresentation().host() else {
             fatalError("\(#file) \(#line) Can't get storeIdentifier from ManagedObjectID:\(self)")
@@ -37,6 +41,7 @@ extension NSManagedObjectID {
         return identifier
     }
 
+    // Entity name from entity name
     var entityName: String {
         guard let entityName = entity.name else {
             fatalError("\(#file) \(#line) Can't get entity name from ManagedObjectID:\(self)")
@@ -45,6 +50,7 @@ extension NSManagedObjectID {
     }
 }
 
+// Model to represent identifier implementation as JSON
 struct PersistentIdentifierJSON: Codable {
     struct Implementation: Codable {
         var primaryKey: String

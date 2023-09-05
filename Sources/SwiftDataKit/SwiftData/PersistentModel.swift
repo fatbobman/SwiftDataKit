@@ -9,7 +9,12 @@ import CoreData
 import Foundation
 import SwiftData
 
+/// Extension for `PersistentModel` that provides a computed property `managedObject` to access the underlying `NSManagedObject`.
 public extension PersistentModel {
+    /// Returns the `NSManagedObject` associated with the `PersistentModel`.
+    ///
+    /// - Returns: The `NSManagedObject` instance.
+    /// - Throws: A fatal error if the `NSManagedObject` cannot be retrieved.
     var managedObject: NSManagedObject {
         guard let object = getMirrorChildValue(of: persistentBackingData, childName: "_managedObject") as? NSManagedObject else {
             fatalError("\(#file) \(#line) Can't get ManagedObject from PersistentModel:\(self)")
