@@ -58,5 +58,9 @@ actor StudentHandler {
         }
         return result
     }
+    
+    func reset() {
+        modelContext.managedObjectContext.reset()
+    }
 }
 
