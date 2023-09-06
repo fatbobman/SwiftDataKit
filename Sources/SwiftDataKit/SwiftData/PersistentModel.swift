@@ -13,8 +13,7 @@ import SwiftData
 public extension PersistentModel {
     /// Returns the `NSManagedObject` associated with the `PersistentModel`.
     ///
-    /// - Returns: The `NSManagedObject` instance.
-    /// - Throws: A fatal error if the `NSManagedObject` cannot be retrieved.
+    /// - Returns: The `NSManagedObject?` instance.
     var managedObject: NSManagedObject? {
         guard let object = getMirrorChildValue(of: persistentBackingData, childName: "_managedObject") as? NSManagedObject else {
             return nil
