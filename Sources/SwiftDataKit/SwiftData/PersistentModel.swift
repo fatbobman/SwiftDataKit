@@ -15,9 +15,9 @@ public extension PersistentModel {
     ///
     /// - Returns: The `NSManagedObject` instance.
     /// - Throws: A fatal error if the `NSManagedObject` cannot be retrieved.
-    var managedObject: NSManagedObject {
+    var managedObject: NSManagedObject? {
         guard let object = getMirrorChildValue(of: persistentBackingData, childName: "_managedObject") as? NSManagedObject else {
-            fatalError("\(#file) \(#line) Can't get ManagedObject from PersistentModel:\(self)")
+            return nil
         }
         return object
     }

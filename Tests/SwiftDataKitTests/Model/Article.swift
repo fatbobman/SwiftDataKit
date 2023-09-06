@@ -84,7 +84,10 @@ actor ArticleHandler {
             fatalError("Can't get tag by name:\(categoryName)")
         }
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "ArticleCollection")
-        let predicate = NSPredicate(format: "SUBQUERY(articles,$article,$article.category == %@).@count > 0", category.managedObject)
+        guard let categoryObject = category.managedObject else {
+            fatalError("can't get managedObject from \(category)")
+        }
+        let predicate = NSPredicate(format: "SUBQUERY(articles,$article,$article.category == %@).@count > 0", categoryObject)
         fetchRequest.predicate = predicate
         return (try? modelContext.managedObjectContext?.count(for: fetchRequest)) ?? 0
     }
@@ -94,7 +97,10 @@ actor ArticleHandler {
             fatalError("Can't get tag by name:\(categoryName)")
         }
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "ArticleCollection")
-        let predicate = NSPredicate(format: "SUBQUERY(articles,$article,$article.category == %@).@count > 0", category.managedObject)
+        guard let categoryObject = category.managedObject else {
+            fatalError("can't get managedObject from \(category)")
+        }
+        let predicate = NSPredicate(format: "SUBQUERY(articles,$article,$article.category == %@).@count > 0", categoryObject)
         fetchRequest.predicate = predicate
         fetchRequest.sortDescriptors = [.init(key: "name", ascending: true)]
         let collections = (try? modelContext.managedObjectContext?.fetch(fetchRequest)) ?? []
@@ -106,7 +112,10 @@ actor ArticleHandler {
             fatalError("Can't get tag by name:\(categoryName)")
         }
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "ArticleCollection")
-        let predicate = NSPredicate(format: "SUBQUERY(articles,$article,$article.category == %@).@count > 0", category.managedObject)
+        guard let categoryObject = category.managedObject else {
+            fatalError("can't get managedObject from \(category)")
+        }
+        let predicate = NSPredicate(format: "SUBQUERY(articles,$article,$article.category == %@).@count > 0", categoryObject)
 
         fetchRequest.predicate = predicate
         fetchRequest.sortDescriptors = [.init(key: "name", ascending: true)]
