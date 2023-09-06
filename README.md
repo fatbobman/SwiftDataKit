@@ -15,3 +15,5 @@ SwiftDataKit 是 SwiftData 的扩展库，它使 SwiftData 开发人员可以访
 使用 SwiftDataKit，可以让开发人员在某些场景下避免重复创建 Core Data 版本的 Data Model 和Stack。
 
 当前这是一个实验性的库。由于 SwiftData 的 API 仍在高速变化中，除非使用者清楚地了解该库的实现方法和可能的使用风险，我们仅推荐有经验的开发者在特定场景下进行尝试。
+
+详细内容，请参阅[SwiftDataKit：让你在 SwiftData 中使用 Core Data 的高级功能](https://www.fatbobman.com/posts/use-Core-Data-features-in-SwiftData-by-SwiftDataKit/)。
