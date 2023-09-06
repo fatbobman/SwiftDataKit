@@ -79,7 +79,7 @@ actor ArticleHandler {
         try modelContext.save()
     }
 
-    func getCollectCountByTagByKit(categoryName: String) -> Int {
+    func getCollectCountByCategoryByKit(categoryName: String) -> Int {
         guard let category = getCategory(by: categoryName) else {
             fatalError("Can't get tag by name:\(categoryName)")
         }
@@ -107,7 +107,7 @@ actor ArticleHandler {
         return collections.compactMap(\.objectID.persistentIdentifier)
     }
 
-    func getCollectNamesByTagByKit(categoryName: String) -> [String] {
+    func getCollectNamesByCategoryByKit(categoryName: String) -> [String] {
         guard let category = getCategory(by: categoryName) else {
             fatalError("Can't get tag by name:\(categoryName)")
         }
@@ -123,7 +123,7 @@ actor ArticleHandler {
         return collections.map { $0.value(forKey: "name") as! String }
     }
 
-    func getCollectCountByTagByQuery(categoryName: String) -> Int {
+    func getCollectCountByCategoryByQuery(categoryName: String) -> Int {
         guard let category = getCategory(by: categoryName) else {
             fatalError("Can't get tag by name:\(categoryName)")
         }

@@ -17,7 +17,7 @@ class ObjectIDToPersistentIDTests: XCTestCase {
         try await dataHandler.dataGenerator()
 
         let queryHandler = ArticleHandler(modelContainer: container)
-        let names = await queryHandler.getCollectNamesByTagByKit(categoryName: Category.Name.tech.rawValue)
+        let names = await queryHandler.getCollectNamesByCategoryByKit(categoryName: Category.Name.tech.rawValue)
         let ids = await queryHandler.getCollectPersistentIdentifiersByTagByKit(categoryName: Category.Name.tech.rawValue)
         let collections = await queryHandler.convertIdentifierToModel(ids: ids, type: ArticleCollection.self)
         XCTAssertEqual(names, collections.map(\.name))
