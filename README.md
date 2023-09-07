@@ -8,6 +8,10 @@ By using SwiftDataKit, developers can avoid duplicating the creation of Core Dat
 
 Currently, this is an experimental library. Since the API of SwiftData is still changing rapidly, we only recommend experienced developers to try it in specific scenarios unless the user understands the implementation method and potential usage risks of the library.
 
+For details, please refer to [SwiftDataKit: Unleashing Advanced Core Data Features in SwiftData](https://fatbobman.medium.com/swiftdatakit-unleashing-advanced-core-data-features-in-swiftdata-3fcd5f443c99) .
+
+
+
 SwiftDataKit 是 SwiftData 的扩展库，它使 SwiftData 开发人员可以访问 SwiftData 元素背后对应的Core Data对象。
 
 由于 SwiftData 框架在创建初期功能尚不完善，开发人员仍需通过调用 Core Data 的方法来实现一些高级功能。
