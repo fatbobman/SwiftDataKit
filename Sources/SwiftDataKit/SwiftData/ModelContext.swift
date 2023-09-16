@@ -23,4 +23,9 @@ public extension ModelContext {
     var coordinator: NSPersistentStoreCoordinator? {
         managedObjectContext?.persistentStoreCoordinator
     }
+
+    // Computed property to access the NSManagedObjectModel
+    var objectModel: NSManagedObjectModel? {
+        coordinator?.managedObjectModel
+    }
 }
