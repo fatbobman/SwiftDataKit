@@ -15,9 +15,6 @@ public extension PersistentModel {
     ///
     /// - Returns: The `NSManagedObject?` instance.
     var managedObject: NSManagedObject? {
-        guard let object = getMirrorChildValue(of: persistentBackingData, childName: "_managedObject") as? NSManagedObject else {
-            return nil
-        }
-        return object
+        persistentBackingData.managedObject
     }
 }
