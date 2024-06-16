@@ -1,5 +1,7 @@
 # SwiftDataKit
 
+> Due to adjustments in the storage logic, SwiftDataKit is **no longer applicable to SwiftData following WWDC 2024**. For more details, please read [SwiftData in WWDC 2024: The Revolution Continues, Stability Still Awaits](https://fatbobman.com/en/posts/use-core-data-features-in-swiftdata-by-swiftdatakit/).
+
 SwiftDataKit is an extension library of SwiftData that allows SwiftData developers to access Core Data objects corresponding to SwiftData elements.
 
 Since the SwiftData framework was not fully functional in the initial creation, developers still need to call Core Data methods to implement some advanced features.
@@ -10,7 +12,7 @@ Currently, this is an experimental library. Since the API of SwiftData is still 
 
 For details, please refer to [SwiftDataKit: Unleashing Advanced Core Data Features in SwiftData](https://fatbobman.com/en/posts/use-core-data-features-in-swiftdata-by-swiftdatakit/) .
 
-
+> 由于存储逻辑的调整，SwiftDataKit **不再适用于 WWDC 2024 后的 SwiftData**。详情请阅读 [SwiftData in WWDC 2024：革命仍在继续、稳定还需时日](https://fatbobman.com/zh/posts/use-core-data-features-in-swiftdata-by-swiftdatakit/)
 
 SwiftDataKit 是 SwiftData 的扩展库，它使 SwiftData 开发人员可以访问 SwiftData 元素背后对应的Core Data对象。
 
